@@ -132,7 +132,7 @@ do
 
   -- No swap files (and no "swap file already exists" prompts).
   -- Trade-off: unsaved changes are lost if Neovim crashes
-  vim.opt.swapfile = false
+  vim.o.swapfile = false
 
   -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
   vim.o.ignorecase = true
