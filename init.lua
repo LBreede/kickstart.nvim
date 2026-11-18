@@ -1037,6 +1037,16 @@ do
   })
 end
 
+-- [[ Rust: Cargo.toml helper ]]
+-- Inline latest versions, version/feature completion (via blink's LSP source),
+-- and code actions (`gra`) to upgrade dependencies. Only active in Cargo.toml.
+do
+  vim.pack.add { gh 'saecki/crates.nvim' }
+  require('crates').setup {
+    lsp = { enabled = true, actions = true, completion = true, hover = true },
+  }
+end
+
 -- ============================================================
 -- SECTION 10: OPTIONAL EXAMPLES / NEXT STEPS
 -- kickstart.plugins.* examples
