@@ -745,18 +745,21 @@ do
     basedpyright = {
       settings = {
         basedpyright = {
-          analysis = { typeCheckingMode = 'standard', diagnosticSeverityOverrides = {
-            -- ruff reports these
-            reportUnusedImport = 'none',
-            reportUnusedVariable = 'none',
-          } },
+          analysis = {
+            typeCheckingMode = 'standard',
+            diagnosticSeverityOverrides = {
+              -- ruff reports these
+              reportUnusedImport = 'none',
+              reportUnusedVariable = 'none',
+            },
+          },
         },
       },
     },
     ruff = {
       on_attach = function(client)
         client.server_capabilities.hoverProvider = false -- basedpyright handles hover
-      end
+      end,
     },
     -- clangd = {},
     -- gopls = {},
@@ -841,7 +844,6 @@ do
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-
   for name, server in pairs(servers) do
     vim.lsp.config(name, server)
     vim.lsp.enable(name)
@@ -860,8 +862,9 @@ do
     format_on_save = function(bufnr)
       -- You can specify filetypes to autoformat on save here:
       local enabled_filetypes = {
-        -- lua = true,
+        lua = true,
         python = true,
+        rust = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
         return { timeout_ms = 500 }
