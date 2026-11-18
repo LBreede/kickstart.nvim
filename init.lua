@@ -731,7 +731,7 @@ do
   })
 
   -- Enable the following language servers
-  --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
+  --  Feel free to add/remove any LSPs that you want here. Mason installs them except for rustup-managed Rust tools.
   --  See `:help lsp-config` for information about keys and how to configure
   ---@type table<string, vim.lsp.Config>
   local servers = {
@@ -760,7 +760,14 @@ do
     --    https://github.com/mrcjkb/rustaceanvim
     --
     -- But for many setups, the LSP (`rust_analyzer`) will work just fine
-    -- rust_analyzer = {},
+    rust_analyzer = {
+      cmd = { vim.fn.expand '~/.cargo/bin/rust-analyzer' },
+      settings = {
+        ['rust-analyzer'] = {
+          check = { command = 'clippy' },
+        },
+      },
+    },
 
     stylua = {}, -- Used to format Lua code
 
@@ -819,7 +826,8 @@ do
   --    :Mason
   --
   -- You can press `g?` for help in this menu.
-  local ensure_installed = vim.tbl_keys(servers or {})
+  -- rustup manages rust-analyzer alongside the Rust toolchain.
+  local ensure_installed = vim.tbl_filter(function(name) return name ~= 'rust_analyzer' end, vim.tbl_keys(servers))
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
   })
@@ -859,7 +867,7 @@ do
     },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
-      -- rust = { 'rustfmt' },
+      rust = { 'rustfmt' },
       -- Conform can also run multiple formatters sequentially
       python = { 'ruff_organize_imports', 'ruff_format' },
       --
