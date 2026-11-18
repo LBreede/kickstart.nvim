@@ -824,6 +824,11 @@ do
   -- loading only the libraries a file actually requires.
   vim.pack.add { gh 'folke/lazydev.nvim' }
   require('lazydev').setup {
+    -- Same rule as lua_ls on_init: leave projects with their own .luarc.json alone
+    enabled = function(root)
+      if root == vim.fn.stdpath 'config' then return true end
+      return not (vim.uv.fs_stat(root .. '/.luarc.json') or vim.uv.fs_stat(root .. '/.luarc.jsonc'))
+    end,
     library = {
       -- Load luvit types when the `vim.uv` word is found
       { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
