@@ -799,9 +799,8 @@ do
           },
           workspace = {
             checkThirdParty = false,
-            -- NOTE: this is a lot slower and will cause issues when working on your own configuration.
-            --  See https://github.com/neovim/nvim-lspconfig/issues/3189
-            library = vim.api.nvim_get_runtime_file('', true),
+            -- Libraries (Neovim runtime + plugins) are added on demand by lazydev.nvim below,
+            -- based on what each file `require`s. Much faster than loading the whole runtimepath.
           },
         })
       end,
@@ -819,6 +818,16 @@ do
     gh 'mason-org/mason.nvim',
     gh 'mason-org/mason-lspconfig.nvim',
     gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
+  }
+
+  -- lazydev: configures lua_ls for editing Neovim Lua (vim.* API, plugin types),
+  -- loading only the libraries a file actually requires.
+  vim.pack.add { gh 'folke/lazydev.nvim' }
+  require('lazydev').setup {
+    lubrary = {
+      -- Load luvit types when the `vim.uv` word is found
+      { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+    },
   }
 
   -- Automatically install LSPs and related tools to stdpath for Neovim
@@ -952,7 +961,11 @@ do
     },
 
     sources = {
-      default = { 'lsp', 'path', 'snippets' },
+      default = { 'lsp', 'path', 'snippets', 'lazydev' },
+      providers = {
+        -- Completion for `require('...')` module names and lazydev-provided types in Lua files
+        lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+      },
     },
 
     snippets = { preset = 'luasnip' },
