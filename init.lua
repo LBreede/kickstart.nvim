@@ -735,6 +735,22 @@ do
   --  See `:help lsp-config` for information about keys and how to configure
   ---@type table<string, vim.lsp.Config>
   local servers = {
+    basedpyright = {
+      settings = {
+        basedpyright = {
+          analysis = { typeCheckingMode = 'standard', diagnosticSeverityOverrides = {
+            -- ruff reports these
+            reportUnusedImport = 'none',
+            reportUnusedVariable = 'none',
+          } },
+        },
+      },
+    },
+    ruff = {
+      on_attach = function(client)
+        client.server_capabilities.hoverProvider = false -- basedpyright handles hover
+      end
+    },
     -- clangd = {},
     -- gopls = {},
     -- pyright = {},
@@ -810,6 +826,7 @@ do
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+
   for name, server in pairs(servers) do
     vim.lsp.config(name, server)
     vim.lsp.enable(name)
@@ -829,7 +846,7 @@ do
       -- You can specify filetypes to autoformat on save here:
       local enabled_filetypes = {
         -- lua = true,
-        -- python = true,
+        python = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
         return { timeout_ms = 500 }
@@ -844,7 +861,7 @@ do
     formatters_by_ft = {
       -- rust = { 'rustfmt' },
       -- Conform can also run multiple formatters sequentially
-      -- python = { "isort", "black" },
+      python = { 'ruff_organize_imports', 'ruff_format' },
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
       -- javascript = { "prettierd", "prettier", stop_after_first = true },
@@ -870,8 +887,8 @@ do
   --    See the README about individual language/framework/plugin snippets:
   --    https://github.com/rafamadriz/friendly-snippets
   --
-  -- vim.pack.add { gh 'rafamadriz/friendly-snippets' }
-  -- require('luasnip.loaders.from_vscode').lazy_load()
+  vim.pack.add { gh 'rafamadriz/friendly-snippets' }
+  require('luasnip.loaders.from_vscode').lazy_load()
 
   -- [[ Autocomplete Engine ]]
   vim.pack.add { { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' } }
