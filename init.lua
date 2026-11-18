@@ -130,6 +130,10 @@ do
   -- Enable undo/redo changes even after closing and reopening a file
   vim.o.undofile = true
 
+  -- No swap files (and no "swap file already exists" prompts).
+  -- Trade-off: unsaved changes are lost if Neovim crashes
+  vim.opt.swapfile = false
+
   -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
   vim.o.ignorecase = true
   vim.o.smartcase = true
@@ -172,7 +176,8 @@ do
   -- See `:help 'confirm'`
   vim.o.confirm = true
 
-  vim.opt.swapfile = false
+  -- Default border style of floating windows.
+  vim.o.winborder = 'rounded'
 end
 
 -- ============================================================
