@@ -824,7 +824,7 @@ do
   -- loading only the libraries a file actually requires.
   vim.pack.add { gh 'folke/lazydev.nvim' }
   require('lazydev').setup {
-    lubrary = {
+    library = {
       -- Load luvit types when the `vim.uv` word is found
       { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
     },
