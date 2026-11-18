@@ -829,10 +829,6 @@ do
       if root == vim.fn.stdpath 'config' then return true end
       return not (vim.uv.fs_stat(root .. '/.luarc.json') or vim.uv.fs_stat(root .. '/.luarc.jsonc'))
     end,
-    library = {
-      -- Load luvit types when the `vim.uv` word is found
-      { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
-    },
   }
 
   -- Automatically install LSPs and related tools to stdpath for Neovim
